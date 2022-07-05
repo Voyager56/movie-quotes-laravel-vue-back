@@ -1,3 +1,4 @@
+PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider::class,
 <?php
 
 use Illuminate\Support\Facades\Facade;
@@ -183,6 +184,7 @@ return [
 		/*
 		 * Package Service Providers...
 		 */
+		PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider::class,
 
 		/*
 		 * Application Service Providers...

@@ -38,6 +38,6 @@ class EmailOrUsername implements Rule
 	 */
 	public function message()
 	{
-		return 'The validation error message.';
+		return __('username_error');
 	}
 }

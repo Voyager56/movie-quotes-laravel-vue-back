@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +19,6 @@ use Illuminate\Support\Facades\Route;
 //	return $request->user();
 //});
 
-Route::post('/login', [LoginController::class, 'loginUser']);
+Route::post('/login', [SessionController::class, 'loginUser']);
+Route::post('/register', [SessionController::class, 'registerUser']);
+Route::post('/logout', [SessionController::class, 'logoutUser']);
