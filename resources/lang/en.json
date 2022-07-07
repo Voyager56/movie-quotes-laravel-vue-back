@@ -1,4 +1,11 @@
 {
     "username_error": "Email or Username is incorrect",
-    "incorrect_password": "Password is incorrect"
+    "incorrect_password": "Password is incorrect",
+    "username_required": "Username is required",
+    "password_required": "Password is required",
+    "email_required": "Email is required",
+    "username_unique": "Username is already taken",
+    "email_unique": "Email is already taken",
+    "email_invalid": "Email is invalid",
+    "password_confirmation" : "Password confirmation is required"
 }

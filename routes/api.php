@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\SessionController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 //	return $request->user();
 //});
 
-Route::post('/login', [SessionController::class, 'loginUser']);
-Route::post('/register', [SessionController::class, 'registerUser']);
-Route::post('/logout', [SessionController::class, 'logoutUser']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/me', [AuthController::class, 'me'])->middleware('api');

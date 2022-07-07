@@ -1,4 +1,11 @@
 {
     "username_error": "მომხმარებლის სახელი ან იმეილი არასწორია",
-    "incorrect_password": "პაროლი არასწორია"
+    "incorrect_password": "პაროლი არასწორია",
+    "username_required": "მომხმარებლის სახელი სავალდებულოა",
+    "password_required": "პაროლი სავალდებულოა",
+    "email_required": "იმეილი სავალდებულოა",
+    "username_unique": "მომხმარებლის სახელი უკვე არსებობს",
+    "email_unique": "იმეილი უკვე არსებობს",
+    "email_invalid": "მეილი არასწორია",
+    "password_confirmation" : "პაროლის დადასტურება სავალდებულოა"
 }
