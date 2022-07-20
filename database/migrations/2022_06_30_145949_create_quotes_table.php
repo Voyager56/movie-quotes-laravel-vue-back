@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('quotes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->json('text');
+            $table->text('thumbnail');
+            $table->foreignId('movie_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         });
     }
 

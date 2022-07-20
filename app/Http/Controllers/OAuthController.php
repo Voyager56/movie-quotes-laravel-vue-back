@@ -18,17 +18,32 @@ class OAuthController extends Controller
 
 	public function handleProviderCallback()
 	{
-		$googleUser = Socialite::driver('google')->user();
+		$googleUser = Socialite::driver('google')->stateless()->user();
+
+		$user = User::where('email', $googleUser->email)->first();
+		if ($user) {
+			$token = auth()->setTTL(60)->attempt([
+				'email' => $googleUser->email,
+				'password' => $googleUser->name . "@" . $googleUser->id,
+			]);
+	
+			return redirect()->away(env("FRONT_END"). "/?token=" . $token);
+		}
+
 		$user = User::updateOrCreate([
 			'username' => $googleUser->name,
+			"email_verified_at" => now(),
 			'email' => $googleUser->email,
-			'password' => bcrypt($googleUser->id),
-			'email_verified_at' => now(),
+			'password' => bcrypt($googleUser->name . "@" . $googleUser->id),
+			'photo' => $googleUser->avatar,
 		]);
+		$user->markEmailAsVerified();
 		$token = auth()->setTTL(60)->attempt([
 			'email' => $googleUser->email,
-			'password' => $googleUser->id,
+			'password' => $googleUser->name . "@" . $googleUser->id,
 		]);
+
+		return redirect()->away(env("FRONT_END"). "/?token=" . $token);
 
 	}
 }

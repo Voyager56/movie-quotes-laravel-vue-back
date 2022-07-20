@@ -15,9 +15,10 @@ class LangMiddleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
-        app()->setLocale(session()->get('lang') ?: 'en');
-		session()->put('lang', app()->getLocale());
+    {   
+        if ($request->has('lang')) {
+            app()->setLocale($request->get('lang'));
+        }
         return $next($request);
     }
 }

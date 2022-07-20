@@ -16,6 +16,12 @@ return new class extends Migration
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->json('title');
+            $table->string('thumbnail');
+            $table->json('description');
+            $table->integer('release_year');
+            $table->string('director');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         });
     }
 

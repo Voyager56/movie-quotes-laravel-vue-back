@@ -10,8 +10,8 @@ class LangController extends Controller
 {
     public function index($lang): JsonResponse
     {
-        app()->setLocale($lang);
-        session()->put('lang', $lang);
-        return response()->json(['status' => 'success', 'lang' => session()->get('lang')]);
+        // app()->setLocale($lang);
+        // session()->put('lang', $lang);
+        return response()->json(['status' => 'success', 'lang' => app()->getLocale('lang')]);
     }
 }

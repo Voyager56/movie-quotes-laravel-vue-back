@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\QuoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,8 +24,10 @@ use Illuminate\Support\Facades\Route;
     Route::post('/me', [AuthController::class, 'me'])->middleware('api');
     Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
-    Route::get('/locale/{lang}', [LangController::class, "index"])->name('locale');
+    Route::get("/quotes", [QuoteController::class, "index"])->middleware('api');
 
+
+    Route::get('/locale/{lang}', [LangController::class, "index"])->name('locale');
 
 
 
