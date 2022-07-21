@@ -25,14 +25,14 @@ class MovieFactory extends Factory
         return [
             'title' => [
                 "en" => $this->faker->sentence,
-                "ka" => \Faker\Factory::create('ka_GE')->sentence,
+                "ka" => \Faker\Factory::create('ka_GE')->realText(10),
             ],
             "thumbnail" => $this->faker->imageUrl,
             'release_year' => $this->faker->year,
             "director" => $this->faker->name,
             "description" => [
                 "en" => $this->faker->paragraph,
-                "ka" => \Faker\Factory::create('ka_GE')->paragraph,
+                "ka" => \Faker\Factory::create('ka_GE')->realText(30),
             ],
             "user_id" => User::factory(),
         ];

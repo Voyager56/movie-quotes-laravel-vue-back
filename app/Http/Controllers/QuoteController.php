@@ -13,8 +13,10 @@ class QuoteController extends Controller
     $data = [];
     foreach($quotes as $quote) {
         $data[] = [
+            "id" => $quote->id,
             'quote' => $quote->text,
             'thumbnail' => $quote->thumbnail,
+            "commentCount" => $quote->comments->count(),
             'user' => $quote->user,
             'movie_name' => $quote->movie->title,
             'release_year' => $quote->movie->release_year,
