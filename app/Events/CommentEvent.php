@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CommentNotification implements ShouldBroadcast
+class CommentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -28,8 +28,8 @@ class CommentNotification implements ShouldBroadcast
                 "authorUsername" => $commentAuthor->username,
                 "authorPhoto" => $commentAuthor->photo,
                 "comment" => $comment->body,
+                "quoteId" => $comment->quote->id,
             ],
-            "quote" => $comment->quote,
             "commentCount" => $comment->quote->comments->count(),
         ];
     }
@@ -41,6 +41,6 @@ class CommentNotification implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('commentUpdate');
+        return new Channel('QuotesChannel');
     }
 }

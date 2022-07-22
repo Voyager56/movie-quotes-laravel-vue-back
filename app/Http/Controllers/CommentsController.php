@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\CommentNotification;
+use App\Events\CommentEvent;
 use App\Models\Comments;
 use App\Models\Quote;
 use App\Models\User;
@@ -31,7 +31,7 @@ class CommentsController extends Controller
             'body' => $request->comment,
             'user_id' => $request->userId,
         ])){
-            CommentNotification::dispatch($commentAuthor, $comment);
+            CommentEvent::dispatch($commentAuthor, $comment);
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);

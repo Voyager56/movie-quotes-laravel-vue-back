@@ -27,9 +27,11 @@ use Illuminate\Support\Facades\Route;
     Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
     Route::get("/quotes", [QuoteController::class, "index"])->middleware('api');
+    Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
 
     Route::get('/comments', [CommentsController::class, 'index']);
     Route::post('/comment/{quoteId}', [CommentsController::class, 'store']);
+
 
 
     Route::get('/locale/{lang}', [LangController::class, "index"])->name('locale');

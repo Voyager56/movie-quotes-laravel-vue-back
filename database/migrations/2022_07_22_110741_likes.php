@@ -1,4 +1,4 @@
-4<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('quotes', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->json('text');
-            $table->text('thumbnail');
-            $table->foreignId('movie_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('quote_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quotes');
+        Schema::dropIfExists('likes');
     }
 };
