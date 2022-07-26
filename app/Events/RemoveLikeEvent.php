@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LikeEvent implements ShouldBroadcast
+class RemoveLikeEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -26,6 +26,7 @@ class LikeEvent implements ShouldBroadcast
                 "like" => $like,
         ];
     }
+
 
     /**
      * Get the channels the event should broadcast on.

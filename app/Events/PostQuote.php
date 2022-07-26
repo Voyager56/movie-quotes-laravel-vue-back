@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LikeEvent implements ShouldBroadcast
+class PostQuote implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,11 +19,21 @@ class LikeEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public $data;
-    public function __construct($like)
+
+    public  $data;
+    public function __construct($quote)
     {
         $this->data = [
-                "like" => $like,
+            "id" => $quote->id,
+            'quote' => $quote->text,
+            'thumbnail' => $quote->thumbnail,
+            "commentCount" => $quote->comments->count(),
+            'user' => $quote->user,
+            'movie_name' => $quote->movie->title,
+            'release_year' => $quote->movie->release_year,
+            "director" => $quote->movie->director,
+            "likes" => $quote->likes->count(),
+            'userLikes' => $quote->likes,
         ];
     }
 
@@ -34,6 +44,6 @@ class LikeEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('QuotesChannel');
+        return new Channel('quotesUpdate');
     }
 }

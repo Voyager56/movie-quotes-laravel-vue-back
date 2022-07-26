@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LikeEvent implements ShouldBroadcast
+class SendNotificationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,12 +19,16 @@ class LikeEvent implements ShouldBroadcast
      *
      * @return void
      */
+
     public $data;
-    public function __construct($like)
+    public $userId;
+    public function __construct($notification, $comingFrom)
     {
         $this->data = [
-                "like" => $like,
+                "notification" => $notification,
+                'comingFrom' => $comingFrom,
         ];
+        $this->userId = $notification->user_id;
     }
 
     /**
@@ -34,6 +38,6 @@ class LikeEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('QuotesChannel');
+        return new PrivateChannel('user.'. $this->userId);
     }
 }

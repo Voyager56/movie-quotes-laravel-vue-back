@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuoteController;
 use Illuminate\Support\Facades\Route;
@@ -27,10 +28,19 @@ use Illuminate\Support\Facades\Route;
     Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
     Route::get("/quotes", [QuoteController::class, "index"])->middleware('api');
+    Route::post('/quotes', [QuoteController::class, "store"])->middleware('api');
     Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
 
     Route::get('/comments', [CommentsController::class, 'index']);
     Route::post('/comment/{quoteId}', [CommentsController::class, 'store']);
+
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications/all', [NotificationController::class, 'destroyAll']);
+    Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
+
+    Route::get('movies', [MovieController::class, 'index']);
+    Route::get('movies/search', [MovieController::class, 'search']);
+
 
 
 
