@@ -18,8 +18,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('type');
             $table->boolean('read')->default(false);
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('from_id');
+            $table->unsignedBigInteger('to_user_id');
+            $table->unsignedBigInteger('from_user_id');
+            $table->foreign('to_user_id')->references('id')->on('users');
+            $table->foreign('from_user_id')->references('id')->on('users');
         });
     }
 

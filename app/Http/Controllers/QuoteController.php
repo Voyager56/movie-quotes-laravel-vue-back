@@ -32,7 +32,7 @@ class QuoteController extends Controller
     foreach($quotes as $quote) {
         $data[] = [
             "id" => $quote->id,
-            'quote' => $quote->text,
+            'quote' => $quote->getTranslations('text'),
             'thumbnail' => $quote->thumbnail,
             "commentCount" => $quote->comments->count(),
             'user' => $quote->user,
@@ -52,6 +52,7 @@ class QuoteController extends Controller
         $alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
         $user = auth()->user();
 
+
         if($alreadyLiked){
             $alreadyLiked->delete();
             RemoveLikeEvent::dispatch($alreadyLiked);
@@ -63,15 +64,18 @@ class QuoteController extends Controller
             'quote_id' => (int)$quoteId,
         ]);
 
-        $notification = Notification::create([
-            'user_id' => $like->quote->user_id,
-            "from_id" => $user->id,
-            'type' => 'like',
-            'read' => false,
-        ]);
+
+        if($user->id !== $like->quote->user_id){
+            $notification = Notification::create([
+                'to_user_id' => $like->quote->user_id,
+                "from_user_id" => $user->id,
+                'type' => 'like',
+                'read' => false,
+            ]);
+            SendNotificationEvent::dispatch($notification, $user);
+        }
 
 
-        SendNotificationEvent::dispatch($notification, $user);
         LikeEvent::dispatch($like);
 
         return response()->json(['message' => 'Like added']);
@@ -79,6 +83,7 @@ class QuoteController extends Controller
 
     public function store(Request $request){
         $data = $request->all();
+        $user = auth()->user();
         $validator = Validator::make($data, [
             'quote_ka' => 'required',
             'quote_en' => 'required',
@@ -90,18 +95,15 @@ class QuoteController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $image = $request->file('');
-        dd($request->file());
-        $imageName = time().'.'.$image->name;
-        $image->move(public_path('images'), $imageName);
-        $imageUrl = 'http://127.0.0.1:8000/storage/images/'.$imageName;
+        $imageName = $request->file('file')->store('public/images');
+        $imageUrl = 'http://127.0.0.1:8000/storage/'. explode("public/  ", $imageName)[1];
 
         $quote = Quote::create([
             'text' => [
                 'ka' => $data['quote_ka'],
                 'en' => $data['quote_en'],
             ],
-            'movie_id' => $data['movie_id'],
+            'movie_id' => $data['movie'],
             'thumbnail' => $imageUrl,
             'user_id' => auth()->user()->id,
         ]);

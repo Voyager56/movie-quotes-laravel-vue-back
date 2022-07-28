@@ -6,6 +6,7 @@ use App\Http\Controllers\LangController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\UserEditController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,8 +28,11 @@ use Illuminate\Support\Facades\Route;
     Route::post('/me', [AuthController::class, 'me'])->middleware('api');
     Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
+
+    Route::post('edit-profile', [UserEditController::class, 'editProfile'])->middleware('api');
+
     Route::get("/quotes", [QuoteController::class, "index"])->middleware('api');
-    Route::post('/quotes', [QuoteController::class, "store"])->middleware('api');
+    Route::post('/quotes/add', [QuoteController::class, "store"])->middleware('api');
     Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
 
     Route::get('/comments', [CommentsController::class, 'index']);

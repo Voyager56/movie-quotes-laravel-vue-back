@@ -10,7 +10,7 @@ class NotificationController extends Controller
 {
 
     public function index(){
-        $notifications = Notification::where('user_id', auth()->user()->id)->get();
+        $notifications = Notification::where('to_user_id', auth()->user()->id)->get();
         $data = [];
         foreach($notifications as $notification){
             $data[] = [
@@ -23,7 +23,7 @@ class NotificationController extends Controller
 
     public function destroyAll()
     {
-        Notification::where('user_id', auth()->user()->id)->update(['read' => 1]);
+        Notification::where('to_user_id', auth()->user()->id)->update(['read' => 1]);
         return response()->json(['success' => true]);
     }
 

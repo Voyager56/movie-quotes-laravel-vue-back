@@ -34,14 +34,17 @@ class CommentsController extends Controller
             'user_id' => $request->userId,
         ]))
         {
-            $notification = Notification::create([
-                'user_id' => $quote->user_id,
-                "from_id" => $commentAuthor->id,
-                'type' => 'comment',
-                'read' => false,
-            ]);
+            if($quote->user_id != $request->userId){
+                $notification = Notification::create([
+                    'to_user_id' => $quote->user_id,
+                    "from_user_id" => $commentAuthor->id,
+                    'type' => 'comment',
+                    'read' => false,
+                ]);
+                SendNotificationEvent::dispatch($notification, $commentAuthor );
+            }
+
             CommentEvent::dispatch($commentAuthor, $comment);
-            SendNotificationEvent::dispatch($notification, $commentAuthor );
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);

@@ -28,7 +28,9 @@ class SendNotificationEvent implements ShouldBroadcast
                 "notification" => $notification,
                 'comingFrom' => $comingFrom,
         ];
-        $this->userId = $notification->user_id;
+        $this->userId = $notification->to_user_id;
+
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**
