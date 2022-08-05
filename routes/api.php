@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
 
     Route::get('movies', [MovieController::class, 'index']);
+    Route::post('movies', [MovieController::class, 'store']);
     Route::get('movies/search', [MovieController::class, 'search']);
 
 

@@ -36,6 +36,7 @@ class OAuthController extends Controller
 			'email' => $googleUser->email,
 			'password' => bcrypt($googleUser->name . "@" . $googleUser->id),
 			'photo' => $googleUser->avatar,
+			'oauth' => 1,
 		]);
 		$user->markEmailAsVerified();
 		$token = auth()->setTTL(60)->attempt([

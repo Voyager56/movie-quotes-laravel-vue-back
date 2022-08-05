@@ -13,6 +13,10 @@ class MovieController extends Controller
         return response()->json($movies);
     }
 
+    public function store(Request $request){
+        dd($request->all());
+    }
+
     public function search(Request $request){
         $searchKeyword = $request->query('search');
         $movies = null;
