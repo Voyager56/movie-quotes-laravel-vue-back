@@ -14,102 +14,102 @@ use Illuminate\Support\Facades\Validator;
 
 class QuoteController extends Controller
 {
-    public function index(Request $request)
-    {
+	public function index(Request $request)
+	{
+		$searchKeyword = $request->query('search');
 
-    $searchKeyword = $request->query('search');
+		$quotes = null;
+		if (strlen($searchKeyword) > 0)
+		{
+			$quotes = Quote::where('text', 'LIKE', "%{$searchKeyword}%")
+			->orWhere('text', 'LIKE', "%{$searchKeyword}%")
+			->orderBy('created_at', 'desc')->get();
+		}
+		else
+		{
+			$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
+		}
+		$data = [];
+		foreach ($quotes as $quote)
+		{
+			$data[] = [
+				'id'           => $quote->id,
+				'quote'        => $quote->getTranslations('text'),
+				'thumbnail'    => $quote->thumbnail,
+				'commentCount' => $quote->comments->count(),
+				'user'         => $quote->user,
+				'movie_name'   => $quote->movie->title,
+				'release_year' => $quote->movie->release_year,
+				'director'     => $quote->movie->director,
+				'likes'        => $quote->likes->count(),
+				'userLikes'    => $quote->likes,
+			];
+		}
+		return response()->json($data);
+	}
 
-    $quotes = null;
-    if(strlen($searchKeyword) > 0){
-        $quotes = Quote::where('text', 'LIKE', "%{$searchKeyword}%")
-            ->orWhere('text', 'LIKE', "%{$searchKeyword}%")
-            ->orderBy('created_at', 'desc')->get();
+	public function addLike($quoteId)
+	{
+		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
+		$user = auth()->user();
 
-    }else{    
-        $quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
-    }
-    $data = [];
-    foreach($quotes as $quote) {
-        $data[] = [
-            "id" => $quote->id,
-            'quote' => $quote->getTranslations('text'),
-            'thumbnail' => $quote->thumbnail,
-            "commentCount" => $quote->comments->count(),
-            'user' => $quote->user,
-            'movie_name' => $quote->movie->title,
-            'release_year' => $quote->movie->release_year,
-            "director" => $quote->movie->director,
-            "likes" => $quote->likes->count(),
-            'userLikes' => $quote->likes,
-        ];
-    }
-        return response()->json($data);
-    }   
+		if ($alreadyLiked)
+		{
+			$alreadyLiked->delete();
+			RemoveLikeEvent::dispatch($alreadyLiked);
+			return response()->json(['message' => 'Like removed']);
+		}
 
+		$like = Likes::create([
+			'user_id'  => $user->id,
+			'quote_id' => (int)$quoteId,
+		]);
 
-    public function addLike($quoteId){
+		if ($user->id !== $like->quote->user_id)
+		{
+			$notification = Notification::create([
+				'to_user_id'   => $like->quote->user_id,
+				'from_user_id' => $user->id,
+				'type'         => 'like',
+				'read'         => false,
+			]);
+			SendNotificationEvent::dispatch($notification, $user);
+		}
 
-        $alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
-        $user = auth()->user();
+		LikeEvent::dispatch($like);
 
+		return response()->json(['message' => 'Like added']);
+	}
 
-        if($alreadyLiked){
-            $alreadyLiked->delete();
-            RemoveLikeEvent::dispatch($alreadyLiked);
-            return response()->json(['message' => 'Like removed']);
-        }
+	public function store(Request $request)
+	{
+		$data = $request->all();
+		$validator = Validator::make($data, [
+			'quote_ka' => 'required',
+			'quote_en' => 'required',
+			'file'     => 'required',
+		]);
 
-        $like =  Likes::create([
-            'user_id' => $user->id,
-            'quote_id' => (int)$quoteId,
-        ]);
+		if ($validator->fails())
+		{
+			return response()->json(['error' => $validator->errors()], 400);
+		}
 
+		$imageName = $request->file('file')->store('public/images');
+		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/  ', $imageName)[1];
 
-        if($user->id !== $like->quote->user_id){
-            $notification = Notification::create([
-                'to_user_id' => $like->quote->user_id,
-                "from_user_id" => $user->id,
-                'type' => 'like',
-                'read' => false,
-            ]);
-            SendNotificationEvent::dispatch($notification, $user);
-        }
+		$quote = Quote::create([
+			'text' => [
+				'ka' => $data['quote_ka'],
+				'en' => $data['quote_en'],
+			],
+			'movie_id'  => $data['movie'],
+			'thumbnail' => $imageUrl,
+			'user_id'   => auth()->user()->id,
+		]);
 
+		PostQuote::dispatch($quote);
 
-        LikeEvent::dispatch($like);
-
-        return response()->json(['message' => 'Like added']);
-    }
-
-    public function store(Request $request){
-        $data = $request->all();
-        $user = auth()->user();
-        $validator = Validator::make($data, [
-            'quote_ka' => 'required',
-            'quote_en' => 'required',
-            "file" => "required",
-        ]);
-
-
-        if($validator->fails()){
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
-        $imageName = $request->file('file')->store('public/images');
-        $imageUrl = 'http://127.0.0.1:8000/storage/'. explode("public/  ", $imageName)[1];
-
-        $quote = Quote::create([
-            'text' => [
-                'ka' => $data['quote_ka'],
-                'en' => $data['quote_en'],
-            ],
-            'movie_id' => $data['movie'],
-            'thumbnail' => $imageUrl,
-            'user_id' => auth()->user()->id,
-        ]);
-
-        PostQuote::dispatch($quote);
-
-        return response()->json(['message' => 'Quote added']);
-    }
+		return response()->json(['message' => 'Quote added']);
+	}
 }
