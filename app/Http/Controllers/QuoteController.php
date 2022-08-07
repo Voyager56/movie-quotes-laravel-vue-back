@@ -38,9 +38,9 @@ class QuoteController extends Controller
 				'thumbnail'    => $quote->thumbnail,
 				'commentCount' => $quote->comments->count(),
 				'user'         => $quote->user,
-				'movie_name'   => $quote->movie->title,
+				'movie_name'   => $quote->movie->getTranslations('title'),
 				'release_year' => $quote->movie->release_year,
-				'director'     => $quote->movie->director,
+				'director'     => $quote->movie->getTranslations('director'),
 				'likes'        => $quote->likes->count(),
 				'userLikes'    => $quote->likes,
 			];
@@ -96,7 +96,7 @@ class QuoteController extends Controller
 		}
 
 		$imageName = $request->file('file')->store('public/images');
-		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/  ', $imageName)[1];
+		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
 
 		$quote = Quote::create([
 			'text' => [
