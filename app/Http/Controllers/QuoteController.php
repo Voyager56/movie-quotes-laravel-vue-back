@@ -48,37 +48,14 @@ class QuoteController extends Controller
 		return response()->json($data);
 	}
 
-	public function addLike($quoteId)
+	public function show($id)
 	{
-		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
-		$user = auth()->user();
-
-		if ($alreadyLiked)
-		{
-			$alreadyLiked->delete();
-			RemoveLikeEvent::dispatch($alreadyLiked);
-			return response()->json(['message' => 'Like removed']);
-		}
-
-		$like = Likes::create([
-			'user_id'  => $user->id,
-			'quote_id' => (int)$quoteId,
+		$quote = Quote::with('likes')->find($id);
+		$comments = $quote->comments()->with('user')->get();
+		return response()->json([
+			'quote'    => $quote,
+			'comments' => $comments,
 		]);
-
-		if ($user->id !== $like->quote->user_id)
-		{
-			$notification = Notification::create([
-				'to_user_id'   => $like->quote->user_id,
-				'from_user_id' => $user->id,
-				'type'         => 'like',
-				'read'         => false,
-			]);
-			SendNotificationEvent::dispatch($notification, $user);
-		}
-
-		LikeEvent::dispatch($like);
-
-		return response()->json(['message' => 'Like added']);
 	}
 
 	public function store(Request $request)
@@ -111,5 +88,62 @@ class QuoteController extends Controller
 		PostQuote::dispatch($quote);
 
 		return response()->json(['message' => 'Quote added']);
+	}
+
+	public function destroy($id)
+	{
+		$quote = Quote::find($id);
+		$quote->delete();
+		return response()->json(['message' => 'Quote deleted']);
+	}
+
+	public function update($id, Request $request)
+	{
+		$quote = Quote::find($id);
+
+		$imageName = $request->file('image')->store('public/images');
+		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+
+		$quote->update([
+			'text' => [
+				'ka' => $request->quote_ka,
+				'en' => $request->quote_en,
+			],
+			'thumbnail' => $imageUrl,
+		]);
+		return response()->json(['message' => 'Quote updated']);
+	}
+
+	public function addLike($quoteId)
+	{
+		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
+		$user = auth()->user();
+
+		if ($alreadyLiked)
+		{
+			$alreadyLiked->delete();
+			RemoveLikeEvent::dispatch($alreadyLiked);
+			return response()->json(['message' => 'Like removed']);
+		}
+
+		$like = Likes::create([
+			'user_id'  => $user->id,
+			'quote_id' => (int)$quoteId,
+		]);
+
+		if ($user->id !== $like->quote->user_id)
+		{
+			$notification = Notification::create([
+				'to_user_id'   => $like->quote->user_id,
+				'from_user_id' => $user->id,
+				'type'         => 'like',
+				'read'         => false,
+			]);
+			SendNotificationEvent::dispatch($notification, $user);
+		}
+
+		LikeEvent::dispatch($like);
+
+		return response()->json(['message' => 'Like added']);
 	}
 }

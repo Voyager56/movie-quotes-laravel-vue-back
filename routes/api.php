@@ -30,7 +30,10 @@ Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 Route::post('edit-profile', [UserEditController::class, 'editProfile'])->middleware('api');
 
 Route::get('/quotes', [QuoteController::class, 'index'])->middleware('api');
+Route::get('/quotes/{id}', [QuoteController::class, 'show'])->middleware('api');
 Route::post('/quotes/add', [QuoteController::class, 'store'])->middleware('api');
+Route::post('/quotes/update/{id}', [QuoteController::class, 'update'])->middleware('api');
+Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy'])->middleware('api');
 Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
 
 Route::get('/comments', [CommentsController::class, 'index']);
