@@ -48,7 +48,7 @@ class AuthController extends Controller
 			'email'    => $request->email,
 			'password' => Hash::make($request->password),
 		]);
-		$token = Auth::login($user);
+		$token = Auth::attempt($user);
 
 		$email_token = Str::random(64);
 

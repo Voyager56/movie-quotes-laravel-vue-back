@@ -6,6 +6,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\UserEditController;
 use Illuminate\Support\Facades\Route;
@@ -55,3 +56,6 @@ Route::get('movies/{id}', [MovieController::class, 'show']);
 Route::post('movies', [MovieController::class, 'store']);
 
 Route::get('/locale/{lang}', [LangController::class, 'index'])->name('locale');
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendPasswordResetEmail']);
+Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword']);

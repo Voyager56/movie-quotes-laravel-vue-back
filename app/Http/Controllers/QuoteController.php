@@ -6,11 +6,11 @@ use App\Events\LikeEvent;
 use App\Events\PostQuote;
 use App\Events\RemoveLikeEvent;
 use App\Events\SendNotificationEvent;
+use App\Http\Requests\QuoteRequest;
 use App\Models\Likes;
 use App\Models\Notification;
 use App\Models\Quote;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class QuoteController extends Controller
 {
@@ -46,19 +46,9 @@ class QuoteController extends Controller
 		]);
 	}
 
-	public function store(Request $request)
+	public function store(QuoteRequest $request)
 	{
 		$data = $request->all();
-		$validator = Validator::make($data, [
-			'quote_ka' => 'required',
-			'quote_en' => 'required',
-			'file'     => 'required',
-		]);
-
-		if ($validator->fails())
-		{
-			return response()->json(['error' => $validator->errors()], 400);
-		}
 
 		$imageName = $request->file('file')->store('public/images');
 		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
@@ -85,7 +75,7 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote deleted']);
 	}
 
-	public function update($id, Request $request)
+	public function update($id, QuoteRequest $request)
 	{
 		$quote = Quote::find($id);
 
