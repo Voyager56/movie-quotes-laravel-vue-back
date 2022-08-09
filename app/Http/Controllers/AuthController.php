@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-
 class AuthController extends Controller
 {
 	public function login(LoginRequest $request): JsonResponse
@@ -32,7 +31,7 @@ class AuthController extends Controller
 
 		return response()->json([
 			'message' => 'error',
-			'error'   => ['username' => ['Invalid credentials.']],
+			'error'   => ['username' => ['invalid_credentials']],
 		], 401);
 	}
 
@@ -59,12 +58,12 @@ class AuthController extends Controller
 		]);
 
 		Mail::send('EmailVerification', [
-			'url'      => url(env("FRONT_END") . '/verified/' . $email_token),
+			'url'      => url(env('FRONT_END') . '/verified/' . $email_token),
 			'username' => $user->username,
 		], function ($message) use ($user) {
-				$message->to($user->email);
-				$message->subject('Verify your email address');
-			});
+			$message->to($user->email);
+			$message->subject('Verify your email address');
+		});
 
 		return response()->json([
 			'status' => 'success',
@@ -76,10 +75,11 @@ class AuthController extends Controller
 	public function me(): JsonResponse
 	{
 		$user = auth()->user();
-		if($user){
-			return response()->json(['user' => $user, "status" => "success"]);
+		if ($user)
+		{
+			return response()->json(['user' => $user, 'status' => 'success']);
 		}
-		return response()->json(["status" => "error"], 401);
+		return response()->json(['status' => 'error'], 401);
 	}
 
 	public function verify($token): JsonResponse
@@ -93,7 +93,7 @@ class AuthController extends Controller
 				$user->markEmailAsVerified();
 				$user->save();
 				$email_token->delete();
-				return response()->json(['status' => 'success', "user" => $user]);
+				return response()->json(['status' => 'success', 'user' => $user]);
 			}
 		}
 		return response()->json(['status' => 'error']);

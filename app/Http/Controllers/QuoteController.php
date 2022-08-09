@@ -16,19 +16,7 @@ class QuoteController extends Controller
 {
 	public function index(Request $request)
 	{
-		$searchKeyword = $request->query('search');
-
-		$quotes = null;
-		if (strlen($searchKeyword) > 0)
-		{
-			$quotes = Quote::where('text', 'LIKE', "%{$searchKeyword}%")
-			->orWhere('text', 'LIKE', "%{$searchKeyword}%")
-			->orderBy('created_at', 'desc')->get();
-		}
-		else
-		{
-			$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
-		}
+		$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
 		$data = [];
 		foreach ($quotes as $quote)
 		{
@@ -112,6 +100,33 @@ class QuoteController extends Controller
 			'thumbnail' => $imageUrl,
 		]);
 		return response()->json(['message' => 'Quote updated']);
+	}
+
+	public function search(Request $request)
+	{
+		$searchKeyword = $request->search;
+		$quotes = Quote::where('text', 'LIKE', '%' . $searchKeyword . '%')->get();
+		if ($searchKeyword == '')
+		{
+			$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
+		}
+		$data = [];
+		foreach ($quotes as $quote)
+		{
+			$data[] = [
+				'id'           => $quote->id,
+				'quote'        => $quote->getTranslations('text'),
+				'thumbnail'    => $quote->thumbnail,
+				'commentCount' => $quote->comments->count(),
+				'user'         => $quote->user,
+				'movie_name'   => $quote->movie->getTranslations('title'),
+				'release_year' => $quote->movie->release_year,
+				'director'     => $quote->movie->getTranslations('director'),
+				'likes'        => $quote->likes->count(),
+				'userLikes'    => $quote->likes,
+			];
+		}
+		return response()->json($data);
 	}
 
 	public function addLike($quoteId)

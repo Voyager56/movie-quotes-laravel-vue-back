@@ -6,6 +6,7 @@ use App\Http\Requests\MovieRequest;
 use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\MovieGenre;
+use App\Models\Quote;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
@@ -48,9 +49,28 @@ class MovieController extends Controller
 		return response()->json('Movie created');
 	}
 
+	public function update($id, MovieRequest $request)
+	{
+		$movie = Movie::find($id);
+		$imageName = $request->file('image')->store('public/images');
+		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+		$movie->update([
+			'title'                    => [
+				'ka' => $request->title_ka,
+				'en' => $request->title_en,
+			],
+			'release_year'             => $request->release_year,
+			'thumbnail'                => $imageUrl,
+			'budget'                   => $request->budget,
+			'description'              => ['en' => $request->description_en, 'ka' => $request->description_ka],
+			'director'                 => ['en' => $request->director_en, 'ka' => $request->director_ka],
+		]);
+		return response()->json('Movie updated');
+	}
+
 	public function show($id)
 	{
-		$movie = Movie::with('genres')->find($id);
+		$movie = auth()->user()->movies()->find($id);
 		$quotes = $movie->quotes()->with('comments', 'likes')->get();
 		return response()->json([
 			'movie'  => $movie,
@@ -60,34 +80,55 @@ class MovieController extends Controller
 
 	public function search(Request $request)
 	{
-		$searchKeyword = $request->query('search');
-		$movies = null;
-		if (strlen($searchKeyword) > 0)
+		$searchKeyword = $request->search;
+		$quotes = null;
+		if ($searchKeyword == '')
 		{
-			$movies = Movie::where('title->en', 'LIKE', "%{$searchKeyword}%")
-			->orWhere('title->ka', 'LIKE', "%{$searchKeyword}%")
-			->orderBy('created_at', 'desc')->get();
+			$quotes = Quote::orderBy('created_at', 'desc')->get();
 		}
 		else
 		{
-			$movies = auth()->user()->movies()->orderBy('created_at', 'desc')->paginate(5);
+			$quotes = Movie::where('title', 'LIKE', '%' . $searchKeyword . '%')->first()->quotes()->get();
 		}
 		$data = [];
-		foreach ($movies as $movie)
+		foreach ($quotes as $quote)
 		{
 			$data[] = [
 				'id'           => $quote->id,
-				'quote'        => $quote->text,
+				'quote'        => $quote->getTranslations('text'),
 				'thumbnail'    => $quote->thumbnail,
 				'commentCount' => $quote->comments->count(),
 				'user'         => $quote->user,
-				'movie_name'   => $quote->movie->title,
+				'movie_name'   => $quote->movie->getTranslations('title'),
 				'release_year' => $quote->movie->release_year,
-				'director'     => $quote->movie->director,
+				'director'     => $quote->movie->getTranslations('director'),
 				'likes'        => $quote->likes->count(),
 				'userLikes'    => $quote->likes,
 			];
 		}
 		return response()->json($data);
+	}
+
+	public function movieSearch(Request $request)
+	{
+		$searchKeyword = $request->search;
+		$movies = null;
+		if ($searchKeyword == '')
+		{
+			$movies = auth()->user()->movies()->with('quotes')->get();
+		}
+		else
+		{
+			$movies = auth()->user()->movies()->where('title', 'LIKE', '%' . $searchKeyword . '%')->with('quotes')->get();
+		}
+
+		return response()->json($movies);
+	}
+
+	public function destroy($id)
+	{
+		$movie = Movie::find($id);
+		$movie->delete();
+		return response()->json('Movie deleted');
 	}
 }

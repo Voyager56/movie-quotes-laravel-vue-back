@@ -33,13 +33,13 @@ class RegistrationRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'username.required'  => __('username_required'),
-			'username.unique'    => __('username_unique'),
-			'email.required'     => __('email_required'),
-			'email.email'        => __('email_invalid'),
-			'email.unique'       => __('email_unique'),
-			'password.required'  => __('password_required'),
-			'password.confirmed' => __('password_confirmed'),
+			'username.required'  => 'username_required',
+			'username.unique'    => 'username_unique',
+			'email.required'     => 'email_required',
+			'email.email'        => 'email_email',
+			'email.unique'       => 'email_unique',
+			'password.required'  => 'password_required',
+			'password.confirmed' => 'password_confirmed',
 		];
 	}
 }

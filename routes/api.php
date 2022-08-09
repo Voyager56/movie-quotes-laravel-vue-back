@@ -30,6 +30,7 @@ Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 Route::post('edit-profile', [UserEditController::class, 'editProfile'])->middleware('api');
 
 Route::get('/quotes', [QuoteController::class, 'index'])->middleware('api');
+Route::get('/quotes/search', [QuoteController::class, 'search'])->middleware('api');
 Route::get('/quotes/{id}', [QuoteController::class, 'show'])->middleware('api');
 Route::post('/quotes/add', [QuoteController::class, 'store'])->middleware('api');
 Route::post('/quotes/update/{id}', [QuoteController::class, 'update'])->middleware('api');
@@ -46,8 +47,11 @@ Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
 Route::get('/genres', [GenreController::class, 'index']);
 
 Route::get('movies', [MovieController::class, 'index']);
+Route::get('movies/search/', [MovieController::class, 'search']);
+Route::post('movies/update/{id}', [MovieController::class, 'update']);
+Route::delete('movies/delete/{id}', [MovieController::class, 'destroy']);
+Route::get('movies/movie-search/', [MovieController::class, 'movieSearch']);
 Route::get('movies/{id}', [MovieController::class, 'show']);
 Route::post('movies', [MovieController::class, 'store']);
-Route::get('movies/search', [MovieController::class, 'search']);
 
 Route::get('/locale/{lang}', [LangController::class, 'index'])->name('locale');
