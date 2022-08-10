@@ -78,7 +78,7 @@ class AuthController extends Controller
 
 	public function verify($token): JsonResponse
 	{
-		$email_token = EmailVerification::where('token', $token)->first();
+		$email_token = EmailVerification::firstWhere('token', $token);
 		if ($email_token)
 		{
 			$user = $email_token->user;

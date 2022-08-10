@@ -42,7 +42,7 @@ class MovieController extends Controller
 		{
 			MovieGenre::create([
 				'movie_id' => $movie->id,
-				'genre_id' => Genre::where('name', $genre)->first()->id,
+				'genre_id' => Genre::firstWhere('name', $genre)->id,
 			]);
 		}
 
@@ -88,7 +88,7 @@ class MovieController extends Controller
 		}
 		else
 		{
-			$quotes = Movie::where('title', 'LIKE', '%' . $searchKeyword . '%')->first()->quotes()->get();
+			$quotes = Movie::firstWhere('title', 'LIKE', '%' . $searchKeyword . '%')->quotes()->get();
 		}
 		$data = [];
 		foreach ($quotes as $quote)

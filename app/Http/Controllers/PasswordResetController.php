@@ -13,7 +13,7 @@ class PasswordResetController extends Controller
 {
 	public function sendPasswordResetEmail(sendPasswordResetEmailRequest $request)
 	{
-		$user = User::where('email', $request->email)->first();
+		$user = User::firstWhere('email', $request->email);
 
 		$token = Str::random(64);
 		DB::table('password_resets')->insert([
@@ -35,13 +35,13 @@ class PasswordResetController extends Controller
 
 	public function resetPassword($token, PasswordChangeRequest $request)
 	{
-		$requestUser = DB::table('password_resets')->where('token', $token)->first();
+		$requestUser = DB::table('password_resets')->firstWhere('token', $token);
 
 		if (!$requestUser)
 		{
 			return response()->json('Invalid token', 401);
 		}
-		$user = User::where('email', $requestUser->email)->first();
+		$user = User::firstWhere('email', $requestUser->email);
 		$user->update(['password' => bcrypt($request->password)]);
 
 		DB::table('password_resets')->where(['email'=> $user->email])->delete();

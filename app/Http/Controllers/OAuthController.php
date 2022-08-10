@@ -20,7 +20,7 @@ class OAuthController extends Controller
 	{
 		$googleUser = Socialite::driver('google')->stateless()->user();
 
-		$user = User::where('email', $googleUser->email)->first();
+		$user = User::firstWhere('email', $googleUser->email);
 		if ($user) {
 			$token = auth()->setTTL(60)->attempt([
 				'email' => $googleUser->email,

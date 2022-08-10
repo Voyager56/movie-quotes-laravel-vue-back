@@ -126,7 +126,7 @@ class QuoteController extends Controller
 
 	public function addLike($quoteId): JsonResponse
 	{
-		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
+		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->firstWhere('quote_id', $quoteId);
 		$user = auth()->user();
 
 		if ($alreadyLiked)
