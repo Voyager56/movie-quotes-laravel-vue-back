@@ -25,25 +25,29 @@ Route::middleware('api')->group(function () {
 	Route::post('/me', [AuthController::class, 'authorizedUser']);
 	Route::post('edit-profile', [UserController::class, 'edit']);
 
-	Route::get('/quotes', [QuoteController::class, 'index']);
-	Route::post('/quotes/add', [QuoteController::class, 'store']);
-	Route::get('/quotes/search', [QuoteController::class, 'search']);
-	Route::get('/quotes/{id}', [QuoteController::class, 'show']);
-	Route::post('/quotes/update/{quote}', [QuoteController::class, 'update']);
-	Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy']);
-	Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
+	Route::controller(QuoteController::class)->group(function () {
+		Route::get('/quotes', 'index')->name('quotes.index');
+		Route::post('/quotes/add', 'store')->name('quotes.store');
+		Route::get('/quotes/search', 'search')->name('quotes.search');
+		Route::get('/quotes/{id}', 'show')->name('quotes.show');
+		Route::post('/quotes/update/{quote}', 'update')->name('quotes.update');
+		Route::delete('/quotes/{id}', 'destroy')->name('quotes.destroy');
+		Route::post('/likes/{quoteId}', 'addLike')->name('quotes.like');
+	});
 
-	Route::get('movies', [MovieController::class, 'index']);
-	Route::get('movies/search/', [MovieController::class, 'search']);
-	Route::post('movies/update/{movie}', [MovieController::class, 'update']);
-	Route::delete('movies/delete/{id}', [MovieController::class, 'destroy']);
-	Route::get('movies/movie-search/', [MovieController::class, 'movieSearch']);
-	Route::get('movies/{id}', [MovieController::class, 'show']);
-	Route::post('movies', [MovieController::class, 'store']);
+	Route::controller(MovieController::class)->group(function () {
+		Route::get('movies', 'index')->name('movies.index');
+		Route::get('movies/search/', 'search')->name('movies.search');
+		Route::post('movies/update/{movie}', 'update')->name('movies.update');
+		Route::delete('movies/delete/{id}', 'destroy')->name('movies.destroy');
+		Route::get('movies/movie-search/', 'movieSearch')->name('movies.movie-search');
+		Route::get('movies/{id}', 'show')->name('movies.show');
+		Route::post('movies', 'store')->name('movies.store');
+	});
 
-	Route::get('notifications', [NotificationController::class, 'index']);
-	Route::post('notifications/all', [NotificationController::class, 'destroyAll']);
-	Route::post('notifications/{notification}', [NotificationController::class, 'destroy']);
+	Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+	Route::post('notifications/all', [NotificationController::class, 'destroyAll'])->name('notifications.delete-all');
+	Route::post('notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.delete');
 
 	Route::get('/comments', [CommentsController::class, 'index']);
 	Route::post('/comment/{quote}', [CommentsController::class, 'store']);
