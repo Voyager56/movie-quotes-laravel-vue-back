@@ -73,11 +73,7 @@ class AuthController extends Controller
 	public function authorizedUser(): JsonResponse
 	{
 		$user = auth()->user();
-		if ($user)
-		{
-			return response()->json(['user' => $user, 'status' => 'success']);
-		}
-		return response()->json(['status' => 'error'], 401);
+		return response()->json(['user' => $user, 'status' => 'success']);
 	}
 
 	public function verify($token): JsonResponse

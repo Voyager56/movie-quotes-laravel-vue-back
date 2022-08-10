@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->group(function () {
-	Route::post('/me', [AuthController::class, 'me']);
+	Route::post('/me', [AuthController::class, 'authorizedUser']);
 	Route::post('edit-profile', [UserEditController::class, 'editProfile']);
 
 	Route::get('/quotes', [QuoteController::class, 'index']);
