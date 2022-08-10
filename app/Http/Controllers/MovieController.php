@@ -14,7 +14,7 @@ class MovieController extends Controller
 	public function index()
 	{
 		$movies = auth()->user()->movies()->with('quotes')->get();
-		return response()->json($movies);
+		return response()->json($movies, 200);
 	}
 
 	public function store(MovieRequest $request)
@@ -46,7 +46,7 @@ class MovieController extends Controller
 			]);
 		}
 
-		return response()->json('Movie created');
+		return response()->json('Movie created', 200);
 	}
 
 	public function update($id, MovieRequest $request)
@@ -65,7 +65,7 @@ class MovieController extends Controller
 			'description'              => ['en' => $request->description_en, 'ka' => $request->description_ka],
 			'director'                 => ['en' => $request->director_en, 'ka' => $request->director_ka],
 		]);
-		return response()->json('Movie updated');
+		return response()->json('Movie updated', 200);
 	}
 
 	public function show($id)
@@ -75,7 +75,7 @@ class MovieController extends Controller
 		return response()->json([
 			'movie'  => $movie,
 			'quotes' => $quotes,
-		]);
+		], 200);
 	}
 
 	public function search(Request $request)
@@ -106,7 +106,7 @@ class MovieController extends Controller
 				'userLikes'    => $quote->likes,
 			];
 		}
-		return response()->json($data);
+		return response()->json($data, 200);
 	}
 
 	public function movieSearch(Request $request)
@@ -122,13 +122,13 @@ class MovieController extends Controller
 			$movies = auth()->user()->movies()->where('title', 'LIKE', '%' . $searchKeyword . '%')->with('quotes')->get();
 		}
 
-		return response()->json($movies);
+		return response()->json($movies, 200);
 	}
 
 	public function destroy($id)
 	{
 		$movie = Movie::find($id);
 		$movie->delete();
-		return response()->json('Movie deleted');
+		return response()->json('Movie deleted', 200);
 	}
 }

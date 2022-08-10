@@ -24,7 +24,7 @@ class AuthController extends Controller
 				'status' => 'success',
 				'token'  => $token,
 				'user'   => auth()->user(),
-			]);
+			], 200);
 		}
 
 		return response()->json([
@@ -36,7 +36,7 @@ class AuthController extends Controller
 	public function logout(): JsonResponse
 	{
 		auth()->logout();
-		return response()->json(['status' => 'success']);
+		return response()->json(['status' => 'success'], 200);
 	}
 
 	public function register(RegistrationRequest $request): JsonResponse
@@ -67,7 +67,7 @@ class AuthController extends Controller
 			'status' => 'success',
 			'token'  => $token,
 			'user'   => auth()->user(),
-		]);
+		], 200);
 	}
 
 	public function me(): JsonResponse

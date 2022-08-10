@@ -44,7 +44,7 @@ class QuoteController extends Controller
 		return response()->json([
 			'quote'    => $quote,
 			'comments' => $comments,
-		]);
+		], 200);
 	}
 
 	public function store(QuoteRequest $request): JsonResponse
@@ -66,14 +66,14 @@ class QuoteController extends Controller
 
 		PostQuote::dispatch($quote);
 
-		return response()->json(['message' => 'Quote added']);
+		return response()->json(['message' => 'Quote added'], 200);
 	}
 
 	public function destroy($id)
 	{
 		$quote = Quote::find($id);
 		$quote->delete();
-		return response()->json(['message' => 'Quote deleted']);
+		return response()->json(['message' => 'Quote deleted'], 200);
 	}
 
 	public function update($id, QuoteRequest $request): JsonResponse
@@ -90,7 +90,7 @@ class QuoteController extends Controller
 			],
 			'thumbnail' => $imageUrl,
 		]);
-		return response()->json(['message' => 'Quote updated']);
+		return response()->json(['message' => 'Quote updated'], 200);
 	}
 
 	public function search(Request $request): JsonResponse
@@ -133,7 +133,7 @@ class QuoteController extends Controller
 		{
 			$alreadyLiked->delete();
 			RemoveLikeEvent::dispatch($alreadyLiked);
-			return response()->json(['message' => 'Like removed']);
+			return response()->json(['message' => 'Like removed'], 200);
 		}
 
 		$like = Likes::create([
@@ -154,6 +154,6 @@ class QuoteController extends Controller
 
 		LikeEvent::dispatch($like);
 
-		return response()->json(['message' => 'Like added']);
+		return response()->json(['message' => 'Like added'], 200);
 	}
 }

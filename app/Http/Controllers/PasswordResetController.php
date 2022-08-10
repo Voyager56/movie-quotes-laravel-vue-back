@@ -30,7 +30,7 @@ class PasswordResetController extends Controller
 			$message->subject('Password Reset');
 		});
 
-		return response()->json('Email sent');
+		return response()->json('Email sent', 200);
 	}
 
 	public function resetPassword($token, PasswordChangeRequest $request)

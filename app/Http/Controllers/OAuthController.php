@@ -13,7 +13,7 @@ class OAuthController extends Controller
 	{
 		$url =  Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
 
-		return response()->json(['url' => $url]);
+		return response()->json(['url' => $url], 2--);
 	}
 
 	public function handleProviderCallback()
