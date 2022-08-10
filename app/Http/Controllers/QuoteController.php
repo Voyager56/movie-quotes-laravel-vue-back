@@ -10,11 +10,12 @@ use App\Http\Requests\QuoteRequest;
 use App\Models\Likes;
 use App\Models\Notification;
 use App\Models\Quote;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-	public function index()
+	public function index(): JsonResponse
 	{
 		$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
 		$data = [];
@@ -46,7 +47,7 @@ class QuoteController extends Controller
 		]);
 	}
 
-	public function store(QuoteRequest $request)
+	public function store(QuoteRequest $request): JsonResponse
 	{
 		$data = $request->all();
 
@@ -75,7 +76,7 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote deleted']);
 	}
 
-	public function update($id, QuoteRequest $request)
+	public function update($id, QuoteRequest $request): JsonResponse
 	{
 		$quote = Quote::find($id);
 
@@ -92,13 +93,17 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote updated']);
 	}
 
-	public function search(Request $request)
+	public function search(Request $request): JsonResponse
 	{
 		$searchKeyword = $request->search;
-		$quotes = Quote::where('text', 'LIKE', '%' . $searchKeyword . '%')->get();
+		$quotes = null;
 		if ($searchKeyword == '')
 		{
 			$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
+		}
+		else
+		{
+			$quotes = Quote::where('text', 'LIKE', '%' . $searchKeyword . '%')->get();
 		}
 		$data = [];
 		foreach ($quotes as $quote)
@@ -116,10 +121,10 @@ class QuoteController extends Controller
 				'userLikes'    => $quote->likes,
 			];
 		}
-		return response()->json($data);
+		return response()->json($data, 200);
 	}
 
-	public function addLike($quoteId)
+	public function addLike($quoteId): JsonResponse
 	{
 		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->where('quote_id', $quoteId)->first();
 		$user = auth()->user();

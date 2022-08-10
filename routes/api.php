@@ -26,9 +26,9 @@ Route::middleware('api')->group(function () {
 	Route::post('edit-profile', [UserEditController::class, 'editProfile']);
 
 	Route::get('/quotes', [QuoteController::class, 'index']);
-	Route::get('/quotes/{id}', [QuoteController::class, 'show']);
 	Route::post('/quotes/add', [QuoteController::class, 'store']);
 	Route::get('/quotes/search', [QuoteController::class, 'search']);
+	Route::get('/quotes/{id}', [QuoteController::class, 'show']);
 	Route::post('/quotes/update/{id}', [QuoteController::class, 'update']);
 	Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy']);
 	Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);

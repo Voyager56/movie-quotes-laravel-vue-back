@@ -78,4 +78,17 @@ class QuoteTest extends TestCase
 			'message' => 'Quote updated',
 		]);
 	}
+
+	public function test_search_functionality()
+	{
+		$text = Quote::inRandomOrder()->first()->text;
+		$this->actingAs($this->user)->get('/api/quotes/search?search=' . $text, [
+			'search' => $text,
+		])->assertStatus(200);
+	}
+
+	public function test_if_no_search_query_string_then_all_quotes_are_returned()
+	{
+		$this->actingAs($this->user)->get('/api/quotes/search?search=')->assertStatus(200);
+	}
 }
