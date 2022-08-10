@@ -8,16 +8,8 @@ class NotificationController extends Controller
 {
 	public function index()
 	{
-		$notifications = Notification::where('to_user_id', auth()->user()->id)->get();
-		$data = [];
-		foreach ($notifications as $notification)
-		{
-			$data[] = [
-				'notification' => $notification,
-				'comingFrom'   => $notification->from,
-			];
-		}
-		return response()->json($data, 200);
+		$notifications = Notification::where('to_user_id', auth()->user()->id)->with('from_user')->get();
+		return response()->json($notifications, 200);
 	}
 
 	public function destroyAll()
