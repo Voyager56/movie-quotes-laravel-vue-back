@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genre;
+use Illuminate\Http\JsonResponse;
 
 class GenreController extends Controller
 {
-	public function index()
+	public function index(): JsonResponse
 	{
 		return response()->json(['genres' => Genre::all()->pluck('name')], 200);
 	}

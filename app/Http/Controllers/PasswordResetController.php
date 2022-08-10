@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PasswordChangeRequest;
 use App\Http\Requests\sendPasswordResetEmailRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class PasswordResetController extends Controller
 {
-	public function sendPasswordResetEmail(sendPasswordResetEmailRequest $request)
+	public function sendPasswordResetEmail(sendPasswordResetEmailRequest $request): JsonResponse
 	{
 		$user = User::firstWhere('email', $request->email);
 
@@ -33,7 +34,7 @@ class PasswordResetController extends Controller
 		return response()->json('Email sent', 200);
 	}
 
-	public function resetPassword($token, PasswordChangeRequest $request)
+	public function resetPassword($token, PasswordChangeRequest $request): JsonResponse
 	{
 		$requestUser = DB::table('password_resets')->firstWhere('token', $token);
 

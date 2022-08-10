@@ -8,11 +8,12 @@ use App\Models\Comments;
 use App\Models\Notification;
 use App\Models\Quote;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
-	public function index()
+	public function index(): JsonResponse
 	{
 		$comments = Comments::all();
 		$data = [];
@@ -28,7 +29,7 @@ class CommentsController extends Controller
 		return response()->json($data, 200);
 	}
 
-	public function store(Quote $quote, Request $request)
+	public function store(Quote $quote, Request $request): JsonResponse
 	{
 		$commentAuthor = User::find($request->userId);
 		if ($comment = $quote->comments()->create([

@@ -7,17 +7,18 @@ use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\MovieGenre;
 use App\Models\Quote;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
-	public function index()
+	public function index(): JsonResponse
 	{
 		$movies = auth()->user()->movies()->with('quotes')->get();
 		return response()->json($movies, 200);
 	}
 
-	public function store(MovieRequest $request)
+	public function store(MovieRequest $request): JsonResponse
 	{
 		$genres = explode(',', $request->genres);
 		$imageName = $request->file('image')->store('public/images');
@@ -49,7 +50,7 @@ class MovieController extends Controller
 		return response()->json('Movie created', 200);
 	}
 
-	public function update(Movie $movie, MovieRequest $request)
+	public function update(Movie $movie, MovieRequest $request): JsonResponse
 	{
 		$imageName = $request->file('image')->store('public/images');
 		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
@@ -67,7 +68,7 @@ class MovieController extends Controller
 		return response()->json('Movie updated', 200);
 	}
 
-	public function show($id)
+	public function show($id): JsonResponse
 	{
 		$movie = auth()->user()->movies()->with('genres', 'quotes.comments', 'quotes.likes')->find($id);
 		return response()->json([
@@ -75,7 +76,7 @@ class MovieController extends Controller
 		], 200);
 	}
 
-	public function search(Request $request)
+	public function search(Request $request): JsonResponse
 	{
 		$searchKeyword = $request->search;
 		$quotes = null;
@@ -106,7 +107,7 @@ class MovieController extends Controller
 		return response()->json($data, 200);
 	}
 
-	public function movieSearch(Request $request)
+	public function movieSearch(Request $request): JsonResponse
 	{
 		$searchKeyword = $request->search;
 		$movies = null;
@@ -122,7 +123,7 @@ class MovieController extends Controller
 		return response()->json($movies, 200);
 	}
 
-	public function destroy($id)
+	public function destroy($id): JsonResponse
 	{
 		$movie = Movie::firstWhere('user_id', auth()->user()->id)->firstWhere('id', $id);
 		$movie->delete();
