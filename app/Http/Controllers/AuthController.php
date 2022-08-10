@@ -70,7 +70,7 @@ class AuthController extends Controller
 		], 200);
 	}
 
-	public function me(): JsonResponse
+	public function authorizedUser(): JsonResponse
 	{
 		$user = auth()->user();
 		if ($user)
