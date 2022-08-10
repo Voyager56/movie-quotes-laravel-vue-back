@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-	public function index(Request $request)
+	public function index()
 	{
 		$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
 		$data = [];
@@ -33,12 +33,12 @@ class QuoteController extends Controller
 				'userLikes'    => $quote->likes,
 			];
 		}
-		return response()->json($data);
+		return response()->json($data, 200);
 	}
 
 	public function show($id)
 	{
-		$quote = Quote::with('likes')->find($id);
+		$quote = Quote::with('likes')->findorFail($id);
 		$comments = $quote->comments()->with('user')->get();
 		return response()->json([
 			'quote'    => $quote,

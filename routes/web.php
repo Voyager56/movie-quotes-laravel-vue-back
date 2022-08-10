@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OAuthController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,8 +14,7 @@ use App\Http\Controllers\OAuthController;
 |
 */
 
-
-
 Route::get('/auth/google/redirect', [OAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [OAuthController::class, 'handleProviderCallback'])->name('auth.callback');
 
+Route::view('/swagger', 'swagger');

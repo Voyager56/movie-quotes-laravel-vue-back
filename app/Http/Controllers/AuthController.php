@@ -48,7 +48,7 @@ class AuthController extends Controller
 			'email'    => $request->email,
 			'password' => Hash::make($request->password),
 		]);
-		$token = Auth::attempt($user);
+		$token = Auth::login($user);
 
 		$email_token = Str::random(64);
 
@@ -96,6 +96,6 @@ class AuthController extends Controller
 				return response()->json(['status' => 'success', 'user' => $user]);
 			}
 		}
-		return response()->json(['status' => 'error']);
+		return response()->json(['status' => 'error'], 401);
 	}
 }

@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\GenreController;
-use App\Http\Controllers\LangController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
@@ -22,40 +21,42 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/me', [AuthController::class, 'me'])->middleware('api');
+Route::middleware('api')->group(function () {
+	Route::post('/me', [AuthController::class, 'me']);
+	Route::post('edit-profile', [UserEditController::class, 'editProfile']);
+
+	Route::get('/quotes', [QuoteController::class, 'index']);
+	Route::get('/quotes/{id}', [QuoteController::class, 'show']);
+	Route::post('/quotes/add', [QuoteController::class, 'store']);
+	Route::get('/quotes/search', [QuoteController::class, 'search']);
+	Route::post('/quotes/update/{id}', [QuoteController::class, 'update']);
+	Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy']);
+	Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
+
+	Route::get('movies', [MovieController::class, 'index']);
+	Route::get('movies/search/', [MovieController::class, 'search']);
+	Route::post('movies/update/{id}', [MovieController::class, 'update']);
+	Route::delete('movies/delete/{id}', [MovieController::class, 'destroy']);
+	Route::get('movies/movie-search/', [MovieController::class, 'movieSearch']);
+	Route::get('movies/{id}', [MovieController::class, 'show']);
+	Route::post('movies', [MovieController::class, 'store']);
+
+	Route::get('notifications', [NotificationController::class, 'index']);
+	Route::post('notifications/all', [NotificationController::class, 'destroyAll']);
+	Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
+
+	Route::get('/comments', [CommentsController::class, 'index']);
+	Route::post('/comment/{quoteId}', [CommentsController::class, 'store']);
+
+	Route::get('/genres', [GenreController::class, 'index']);
+	Route::post('/logout', [AuthController::class, 'logout']);
+});
 Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
-Route::post('edit-profile', [UserEditController::class, 'editProfile'])->middleware('api');
+Route::middleware('guest')->group(function () {
+	Route::post('/login', [AuthController::class, 'login']);
+	Route::post('/register', [AuthController::class, 'register']);
 
-Route::get('/quotes', [QuoteController::class, 'index'])->middleware('api');
-Route::get('/quotes/search', [QuoteController::class, 'search'])->middleware('api');
-Route::get('/quotes/{id}', [QuoteController::class, 'show'])->middleware('api');
-Route::post('/quotes/add', [QuoteController::class, 'store'])->middleware('api');
-Route::post('/quotes/update/{id}', [QuoteController::class, 'update'])->middleware('api');
-Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy'])->middleware('api');
-Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
-
-Route::get('/comments', [CommentsController::class, 'index']);
-Route::post('/comment/{quoteId}', [CommentsController::class, 'store']);
-
-Route::get('notifications', [NotificationController::class, 'index']);
-Route::post('notifications/all', [NotificationController::class, 'destroyAll']);
-Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
-
-Route::get('/genres', [GenreController::class, 'index']);
-
-Route::get('movies', [MovieController::class, 'index']);
-Route::get('movies/search/', [MovieController::class, 'search']);
-Route::post('movies/update/{id}', [MovieController::class, 'update']);
-Route::delete('movies/delete/{id}', [MovieController::class, 'destroy']);
-Route::get('movies/movie-search/', [MovieController::class, 'movieSearch']);
-Route::get('movies/{id}', [MovieController::class, 'show']);
-Route::post('movies', [MovieController::class, 'store']);
-
-Route::get('/locale/{lang}', [LangController::class, 'index'])->name('locale');
-
-Route::post('/forgot-password', [PasswordResetController::class, 'sendPasswordResetEmail']);
-Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword']);
+	Route::post('/forgot-password', [PasswordResetController::class, 'sendPasswordResetEmail']);
+	Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword']);
+});

@@ -5,8 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-
-
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
@@ -17,12 +15,13 @@ class UserFactory extends Factory
 	 *
 	 * @return array<string, mixed>
 	 */
-
 	public function definition()
 	{
 		return [
 			'username'              => $this->faker->name,
 			'email'                 => $this->faker->safeEmail,
+			'photo'                 => $this->faker->imageUrl(),
+			'oauth'                 => 0,
 			'email_verified_at'     => now(),
 			'password'              => bcrypt('password'), // password
 			'remember_token'        => Str::random(10),

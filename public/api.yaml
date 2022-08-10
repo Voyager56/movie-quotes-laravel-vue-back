@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: Coronatime API
+  description: Here goes description
+  version: 0.1.9
+
+servers:
+  - url: http://127.0.0.1:8000
+    description: local server
+  - url: http://127.0.0.1:8000
+    description: production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/me:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Checks jwt token and returns a user.
+      responses:
+        "200":
+          description: User Object
+          content:
+            application/json:
+              schema:
+                type: json
