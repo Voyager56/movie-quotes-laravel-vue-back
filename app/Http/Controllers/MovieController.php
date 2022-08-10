@@ -69,11 +69,9 @@ class MovieController extends Controller
 
 	public function show($id)
 	{
-		$movie = auth()->user()->movies()->with('genres')->find($id);
-		$quotes = $movie->quotes()->with('comments', 'likes')->get();
+		$movie = auth()->user()->movies()->with('genres', 'quotes.comments', 'quotes.likes')->find($id);
 		return response()->json([
 			'movie'  => $movie,
-			'quotes' => $quotes,
 		], 200);
 	}
 
