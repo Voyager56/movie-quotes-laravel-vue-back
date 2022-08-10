@@ -68,7 +68,7 @@ class MovieController extends Controller
 		return response()->json('Movie updated', 200);
 	}
 
-	public function show($id): JsonResponse
+	public function show(int $id): JsonResponse
 	{
 		$movie = auth()->user()->movies()->with('genres', 'quotes.comments', 'quotes.likes')->find($id);
 		return response()->json([
@@ -123,7 +123,7 @@ class MovieController extends Controller
 		return response()->json($movies, 200);
 	}
 
-	public function destroy($id): JsonResponse
+	public function destroy(int $id): JsonResponse
 	{
 		$movie = Movie::firstWhere('user_id', auth()->user()->id)->firstWhere('id', $id);
 		$movie->delete();

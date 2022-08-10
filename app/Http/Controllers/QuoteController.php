@@ -37,7 +37,7 @@ class QuoteController extends Controller
 		return response()->json($data, 200);
 	}
 
-	public function show($id): JsonResponse
+	public function show(int $id): JsonResponse
 	{
 		$quote = Quote::with('likes')->findorFail($id);
 		$comments = $quote->comments()->with('user')->get();
@@ -69,7 +69,7 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote added'], 200);
 	}
 
-	public function destroy($id): JsonResponse
+	public function destroy(int $id): JsonResponse
 	{
 		$quote = Quote::firstWhere('user_id', auth()->user()->id)->find($id);
 		$quote->delete();
@@ -123,7 +123,7 @@ class QuoteController extends Controller
 		return response()->json($data, 200);
 	}
 
-	public function addLike($quoteId): JsonResponse
+	public function addLike(int $quoteId): JsonResponse
 	{
 		$alreadyLiked = Likes::where('user_id', auth()->user()->id)->firstWhere('quote_id', $quoteId);
 		$user = auth()->user();

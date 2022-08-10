@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditUserRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-	public function edit(Request $request): JsonResponse
+	public function edit(EditUserRequest $request): JsonResponse
 	{
-		$data = $request->validate([
-			'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore(auth()->user()->id)],
-			'email'    => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore(auth()->user()->id)],
-			'password' => 'nullable|string|min:6|confirmed',
-		]);
+		$data = $request->all();
 		$image = $request->file('file')->store('public/images');
 		$image = str_replace('public/', '', $image);
 
