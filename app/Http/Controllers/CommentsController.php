@@ -28,9 +28,8 @@ class CommentsController extends Controller
 		return response()->json($data, 200);
 	}
 
-	public function store($quoteId, Request $request)
+	public function store(Quote $quote, Request $request)
 	{
-		$quote = Quote::find($quoteId);
 		$commentAuthor = User::find($request->userId);
 		if ($comment = $quote->comments()->create([
 			'body' => $request->comment,

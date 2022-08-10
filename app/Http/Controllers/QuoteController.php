@@ -71,14 +71,13 @@ class QuoteController extends Controller
 
 	public function destroy($id)
 	{
-		$quote = Quote::find($id);
+		$quote = Quote::firstWhere('user_id', auth()->user()->id)->find($id);
 		$quote->delete();
 		return response()->json(['message' => 'Quote deleted'], 200);
 	}
 
-	public function update($id, QuoteRequest $request): JsonResponse
+	public function update(Quote $quote, QuoteRequest $request): JsonResponse
 	{
-		$quote = Quote::find($id);
 
 		$imageName = $request->file('image')->store('public/images');
 		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];

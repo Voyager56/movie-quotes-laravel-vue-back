@@ -29,13 +29,13 @@ Route::middleware('api')->group(function () {
 	Route::post('/quotes/add', [QuoteController::class, 'store']);
 	Route::get('/quotes/search', [QuoteController::class, 'search']);
 	Route::get('/quotes/{id}', [QuoteController::class, 'show']);
-	Route::post('/quotes/update/{id}', [QuoteController::class, 'update']);
+	Route::post('/quotes/update/{quote}', [QuoteController::class, 'update']);
 	Route::delete('/quotes/delete/{id}', [QuoteController::class, 'destroy']);
 	Route::post('/likes/{quoteId}', [QuoteController::class, 'addLike']);
 
 	Route::get('movies', [MovieController::class, 'index']);
 	Route::get('movies/search/', [MovieController::class, 'search']);
-	Route::post('movies/update/{id}', [MovieController::class, 'update']);
+	Route::post('movies/update/{movie}', [MovieController::class, 'update']);
 	Route::delete('movies/delete/{id}', [MovieController::class, 'destroy']);
 	Route::get('movies/movie-search/', [MovieController::class, 'movieSearch']);
 	Route::get('movies/{id}', [MovieController::class, 'show']);
@@ -43,10 +43,10 @@ Route::middleware('api')->group(function () {
 
 	Route::get('notifications', [NotificationController::class, 'index']);
 	Route::post('notifications/all', [NotificationController::class, 'destroyAll']);
-	Route::post('notifications/{id}', [NotificationController::class, 'destroy']);
+	Route::post('notifications/{notification}', [NotificationController::class, 'destroy']);
 
 	Route::get('/comments', [CommentsController::class, 'index']);
-	Route::post('/comment/{quoteId}', [CommentsController::class, 'store']);
+	Route::post('/comment/{quote}', [CommentsController::class, 'store']);
 
 	Route::get('/genres', [GenreController::class, 'index']);
 	Route::post('/logout', [AuthController::class, 'logout']);

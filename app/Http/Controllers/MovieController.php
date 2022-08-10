@@ -49,9 +49,8 @@ class MovieController extends Controller
 		return response()->json('Movie created', 200);
 	}
 
-	public function update($id, MovieRequest $request)
+	public function update(Movie $movie, MovieRequest $request)
 	{
-		$movie = Movie::find($id);
 		$imageName = $request->file('image')->store('public/images');
 		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
 		$movie->update([
@@ -127,7 +126,7 @@ class MovieController extends Controller
 
 	public function destroy($id)
 	{
-		$movie = Movie::find($id);
+		$movie = Movie::firstWhere('user_id', auth()->user()->id)->firstWhere('id', $id);
 		$movie->delete();
 		return response()->json('Movie deleted', 200);
 	}
