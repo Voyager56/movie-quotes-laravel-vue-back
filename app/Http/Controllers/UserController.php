@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
-class UserEditController extends Controller
+class UserController extends Controller
 {
-	public function editProfile(Request $request)
+	public function edit(Request $request): JsonResponse
 	{
 		$data = $request->validate([
 			'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore(auth()->user()->id)],

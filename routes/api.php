@@ -7,7 +7,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuoteController;
-use App\Http\Controllers\UserEditController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('api')->group(function () {
 	Route::post('/me', [AuthController::class, 'authorizedUser']);
-	Route::post('edit-profile', [UserEditController::class, 'editProfile']);
+	Route::post('edit-profile', [UserController::class, 'edit']);
 
 	Route::get('/quotes', [QuoteController::class, 'index']);
 	Route::post('/quotes/add', [QuoteController::class, 'store']);
