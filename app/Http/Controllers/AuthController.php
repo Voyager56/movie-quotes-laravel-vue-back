@@ -7,7 +7,6 @@ use App\Http\Requests\RegistrationRequest;
 use App\Models\EmailVerification;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -36,7 +35,7 @@ class AuthController extends Controller
 
 	public function logout(): JsonResponse
 	{
-		Auth::logout();
+		auth()->logout();
 		return response()->json(['status' => 'success']);
 	}
 
@@ -47,7 +46,7 @@ class AuthController extends Controller
 			'email'    => $request->email,
 			'password' => Hash::make($request->password),
 		]);
-		$token = Auth::login($user);
+		$token = auth()->login($user);
 
 		$email_token = Str::random(64);
 
@@ -67,7 +66,7 @@ class AuthController extends Controller
 		return response()->json([
 			'status' => 'success',
 			'token'  => $token,
-			'user'   => Auth::user(),
+			'user'   => auth()->user(),
 		]);
 	}
 
