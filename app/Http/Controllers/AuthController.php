@@ -73,23 +73,24 @@ class AuthController extends Controller
 	public function authorizedUser(): JsonResponse
 	{
 		$user = auth()->user();
-		return response()->json(['user' => $user, 'status' => 'success']);
+		if ($user)
+		{
+			return response()->json(['user' => $user, 'status' => 'success'], 200);
+		}
+		return response()->json(['status' => 'error'], 401);
 	}
 
 	public function verify(string $token): JsonResponse
 	{
 		$email_token = EmailVerification::firstWhere('token', $token);
-		if ($email_token)
+		if (!$email_token)
 		{
-			$user = $email_token->user;
-			if ($user->email_verified_at == null)
-			{
-				$user->markEmailAsVerified();
-				$user->save();
-				$email_token->delete();
-				return response()->json(['status' => 'success', 'user' => $user]);
-			}
+			return response()->json(['status' => 'error'], 401);
 		}
-		return response()->json(['status' => 'error'], 401);
+		$user = $email_token->user;
+		$user->markEmailAsVerified();
+		$user->save();
+		$email_token->delete();
+		return response()->json(['status' => 'success', 'user' => $user]);
 	}
 }

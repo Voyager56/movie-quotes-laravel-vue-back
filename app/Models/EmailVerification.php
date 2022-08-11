@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmailVerification extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $fillable = ['user_id', 'token'];
+	protected $fillable = ['user_id', 'token'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 }

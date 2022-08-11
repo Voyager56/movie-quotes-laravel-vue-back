@@ -27,7 +27,7 @@ class QuoteTest extends TestCase
 		$this->setUpFaker();
 	}
 
-	public function test_if_quotes_are_returned_from_index_method()
+	public function test_if_quotes_are_returned_from_index_method(): void
 	{
 		$this->actingAs($this->user)->get('/api/quotes')->assertStatus(200);
 	}
@@ -37,15 +37,16 @@ class QuoteTest extends TestCase
 		$id = Quote::inRandomOrder()->first()->id;
 		$response = $this->actingAs($this->user)->get('/api/quotes/' . $id);
 
-		$this->assertTrue(
-			$response->original['quote']->id === $id
+		$this->assertSame(
+			$response->original['quote']->id,
+			$id
 		);
 	}
 
 	public function test_if_correct_data_is_sent_quote_should_be_saved()
 	{
 		Storage::fake('public');
-		$response = $this->actingAs($this->user)->post('/api/quotes/add', [
+		$response = $this->actingAs($this->user)->post('/api/quotes', [
 			'quote_en'    => $this->faker->sentence,
 			'quote_ka'    => $this->faker->sentence,
 			'image'       => UploadedFile::fake()->image('avatar.jpg'),
@@ -60,8 +61,9 @@ class QuoteTest extends TestCase
 
 	public function test_see_if_quote_delete_method_works()
 	{
-		$id = Quote::inRandomOrder()->first()->id;
-		$this->actingAs($this->user)->delete('/api/quotes/delete/' . $id)->assertJson([
+		$quote = Quote::inRandomOrder()->first();
+		$user = $quote->user;
+		$this->actingAs($user)->delete('/api/quotes/' . $quote->id)->assertJson([
 			'message' => 'Quote deleted',
 		]);
 	}
@@ -69,7 +71,7 @@ class QuoteTest extends TestCase
 	public function test_check_if_quote_upadte_method_works()
 	{
 		$id = Quote::inRandomOrder()->first()->id;
-		$response = $this->actingAs($this->user)->post('/api/quotes/update/' . $id, [
+		$response = $this->actingAs($this->user)->put('/api/quotes/' . $id, [
 			'quote_en'    => $this->faker->sentence,
 			'quote_ka'    => $this->faker->sentence,
 			'image'       => UploadedFile::fake()->image('avatar.jpg'),
@@ -90,5 +92,20 @@ class QuoteTest extends TestCase
 	public function test_if_no_search_query_string_then_all_quotes_are_returned()
 	{
 		$this->actingAs($this->user)->get('/api/quotes/search?search=')->assertStatus(200);
+	}
+
+	public function test_see_if_liking_quote_works()
+	{
+		$quote = Quote::inRandomOrder()->first();
+		$this->actingAs($this->user)->post('/api/likes/' . $quote->id)->assertStatus(200);
+	}
+
+	public function test_liking_quote_second_time_should_remove_like()
+	{
+		$quote = Quote::inRandomOrder()->first();
+		$this->actingAs($this->user)->post('/api/likes/' . $quote->id)->assertStatus(200);
+		$this->actingAs($this->user)->post('/api/likes/' . $quote->id)->assertJson([
+			'message' => 'Like removed',
+		]);
 	}
 }

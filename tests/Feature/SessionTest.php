@@ -138,7 +138,8 @@ class SessionTest extends TestCase
 
 		$userId = $user->original['user']->id;
 
-		$token = DB::table('email_verifications')->firstWhere('user_id', $userId)->token;
+		$token = DB::table('email_verifications')->where('user_id', $userId)->first()->token;
+
 
 		$response = $this->get('/api/email-verification/' . $token);
 

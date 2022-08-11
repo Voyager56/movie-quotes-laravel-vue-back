@@ -22,7 +22,7 @@ class MovieController extends Controller
 	{
 		$genres = explode(',', $request->genres);
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . '/storage/' . explode('public/', $imageName)[1];
 
 		$data = $request->all();
 

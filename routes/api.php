@@ -38,8 +38,8 @@ Route::middleware('api')->group(function () {
 	Route::controller(MovieController::class)->group(function () {
 		Route::get('movies', 'index')->name('movies.index');
 		Route::get('movies/search/', 'search')->name('movies.search');
-		Route::post('movies/update/{movie}', 'update')->name('movies.update');
-		Route::delete('movies/delete/{id}', 'destroy')->name('movies.destroy');
+		Route::put('movies/{movie}', 'update')->name('movies.update');
+		Route::delete('movies/{id}', 'destroy')->name('movies.destroy');
 		Route::get('movies/movie-search/', 'movieSearch')->name('movies.movie-search');
 		Route::get('movies/{id}', 'show')->name('movies.show');
 		Route::post('movies', 'store')->name('movies.store');
