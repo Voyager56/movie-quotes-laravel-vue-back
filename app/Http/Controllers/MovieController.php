@@ -22,7 +22,7 @@ class MovieController extends Controller
 	{
 		$genres = explode(',', $request->genres);
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
 
 		$data = $request->all();
 
@@ -53,7 +53,7 @@ class MovieController extends Controller
 	public function update(Movie $movie, MovieRequest $request): JsonResponse
 	{
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
 		$movie->update([
 			'title'                    => [
 				'ka' => $request->title_ka,

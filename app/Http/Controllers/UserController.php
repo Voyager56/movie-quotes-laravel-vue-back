@@ -17,7 +17,7 @@ class UserController extends Controller
 
 		$user = auth()->user();
 		$user->update($data);
-		$user->photo = 'http://127.0.0.1:8000/storage/' . $image;
+		$user->photo = ENV('BACKEND_URL') . 'storage/' . $image;
 		$user->save();
 		return response()->json(['message' => 'Profile updated'], 200);
 	}

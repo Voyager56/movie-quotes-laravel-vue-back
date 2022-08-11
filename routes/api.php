@@ -27,10 +27,10 @@ Route::middleware('api')->group(function () {
 
 	Route::controller(QuoteController::class)->group(function () {
 		Route::get('/quotes', 'index')->name('quotes.index');
-		Route::post('/quotes/add', 'store')->name('quotes.store');
+		Route::post('/quotes', 'store')->name('quotes.store');
 		Route::get('/quotes/search', 'search')->name('quotes.search');
 		Route::get('/quotes/{id}', 'show')->name('quotes.show');
-		Route::post('/quotes/update/{quote}', 'update')->name('quotes.update');
+		Route::put('/quotes/{quote}', 'update')->name('quotes.update');
 		Route::delete('/quotes/{id}', 'destroy')->name('quotes.destroy');
 		Route::post('/likes/{quoteId}', 'addLike')->name('quotes.like');
 	});

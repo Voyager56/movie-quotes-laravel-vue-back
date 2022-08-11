@@ -52,7 +52,7 @@ class QuoteController extends Controller
 		$data = $request->all();
 
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
 
 		$quote = Quote::create([
 			'text' => [
@@ -80,7 +80,7 @@ class QuoteController extends Controller
 	{
 
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = 'http://127.0.0.1:8000/storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
 
 		$quote->update([
 			'text' => [
