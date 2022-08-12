@@ -36,7 +36,7 @@ class PasswordResetController extends Controller
 
 	public function resetPassword(string $token, PasswordChangeRequest $request): JsonResponse
 	{
-		$requestUser = DB::table('password_resets')->firstWhere('token', $token);
+		$requestUser = DB::table('password_resets')->where('token', $token)->first();
 
 		if (!$requestUser)
 		{
@@ -47,7 +47,7 @@ class PasswordResetController extends Controller
 
 		DB::table('password_resets')->where(['email'=> $user->email])->delete();
 
-		$token = auth()->attempt($user);
+		$token = auth()->login($user);
 
 		return response()->json(['token' => $token], 200);
 	}

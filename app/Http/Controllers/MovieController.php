@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MovieRequest;
+use App\Http\Resources\QuoteResource;
 use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\MovieGenre;
@@ -88,22 +89,7 @@ class MovieController extends Controller
 		{
 			$quotes = Movie::firstWhere('title', 'LIKE', '%' . $searchKeyword . '%')->quotes()->get();
 		}
-		$data = [];
-		foreach ($quotes as $quote)
-		{
-			$data[] = [
-				'id'           => $quote->id,
-				'quote'        => $quote->getTranslations('text'),
-				'thumbnail'    => $quote->thumbnail,
-				'commentCount' => $quote->comments->count(),
-				'user'         => $quote->user,
-				'movie_name'   => $quote->movie->getTranslations('title'),
-				'release_year' => $quote->movie->release_year,
-				'director'     => $quote->movie->getTranslations('director'),
-				'likes'        => $quote->likes->count(),
-				'userLikes'    => $quote->likes,
-			];
-		}
+		$data = QuoteResource::collection($quotes);
 		return response()->json($data, 200);
 	}
 

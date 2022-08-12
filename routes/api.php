@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->group(function () {
-	Route::post('/me', [AuthController::class, 'authorizedUser']);
 	Route::post('edit-profile', [UserController::class, 'edit']);
 
 	Route::controller(QuoteController::class)->group(function () {
@@ -45,22 +44,27 @@ Route::middleware('api')->group(function () {
 		Route::post('movies', 'store')->name('movies.store');
 	});
 
-	Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
-	Route::post('notifications/all', [NotificationController::class, 'destroyAll'])->name('notifications.delete-all');
-	Route::post('notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.delete');
+	Route::controller(NotificationController::class)->group(function () {
+		Route::get('notifications', 'index')->name('notifications.index');
+		Route::post('notifications/all', 'destroyAll')->name('notifications.delete-all');
+		Route::post('notifications/{notification}', 'destroy')->name('notifications.delete');
+	});
 
 	Route::get('/comments', [CommentsController::class, 'index']);
 	Route::post('/comment/{quote}', [CommentsController::class, 'store']);
 
 	Route::get('/genres', [GenreController::class, 'index']);
+
 	Route::post('/logout', [AuthController::class, 'logout']);
+	Route::post('/me', [AuthController::class, 'authorizedUser']);
 });
-Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
 
 Route::middleware('guest')->group(function () {
 	Route::post('/login', [AuthController::class, 'login']);
 	Route::post('/register', [AuthController::class, 'register']);
-
-	Route::post('/forgot-password', [PasswordResetController::class, 'sendPasswordResetEmail']);
-	Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword']);
 });
+
+Route::get('/email-verification/{token}', [AuthController::class, 'verify']);
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendPasswordResetEmail']);
+Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword']);

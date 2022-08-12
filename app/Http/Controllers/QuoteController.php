@@ -7,6 +7,7 @@ use App\Events\PostQuote;
 use App\Events\RemoveLikeEvent;
 use App\Events\SendNotificationEvent;
 use App\Http\Requests\QuoteRequest;
+use App\Http\Resources\QuoteResource;
 use App\Models\Likes;
 use App\Models\Notification;
 use App\Models\Quote;
@@ -18,22 +19,7 @@ class QuoteController extends Controller
 	public function index(): JsonResponse
 	{
 		$quotes = Quote::orderBy('created_at', 'desc')->paginate(5);
-		$data = [];
-		foreach ($quotes as $quote)
-		{
-			$data[] = [
-				'id'           => $quote->id,
-				'quote'        => $quote->getTranslations('text'),
-				'thumbnail'    => $quote->thumbnail,
-				'commentCount' => $quote->comments->count(),
-				'user'         => $quote->user,
-				'movie_name'   => $quote->movie->getTranslations('title'),
-				'release_year' => $quote->movie->release_year,
-				'director'     => $quote->movie->getTranslations('director'),
-				'likes'        => $quote->likes->count(),
-				'userLikes'    => $quote->likes,
-			];
-		}
+		$data = QuoteResource::collection($quotes);
 		return response()->json($data, 200);
 	}
 
@@ -78,7 +64,6 @@ class QuoteController extends Controller
 
 	public function update(Quote $quote, QuoteRequest $request): JsonResponse
 	{
-
 		$imageName = $request->file('image')->store('public/images');
 		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
 
@@ -104,22 +89,7 @@ class QuoteController extends Controller
 		{
 			$quotes = Quote::where('text', 'LIKE', '%' . $searchKeyword . '%')->get();
 		}
-		$data = [];
-		foreach ($quotes as $quote)
-		{
-			$data[] = [
-				'id'           => $quote->id,
-				'quote'        => $quote->getTranslations('text'),
-				'thumbnail'    => $quote->thumbnail,
-				'commentCount' => $quote->comments->count(),
-				'user'         => $quote->user,
-				'movie_name'   => $quote->movie->getTranslations('title'),
-				'release_year' => $quote->movie->release_year,
-				'director'     => $quote->movie->getTranslations('director'),
-				'likes'        => $quote->likes->count(),
-				'userLikes'    => $quote->likes,
-			];
-		}
+		$data = QuoteResource::collection($quotes);
 		return response()->json($data, 200);
 	}
 
