@@ -74,4 +74,37 @@ class MovieTest extends TestCase
 		]);
 		$response->assertStatus(200);
 	}
+
+	public function test_if_correct_data_is_sent_movie_should_be_deleted()
+	{
+		$movie = Movie::inRandomOrder()->first();
+		$response = $this->actingAs($movie->user)->delete('/api/movies/' . $movie->id);
+		$response->assertStatus(200);
+	}
+
+	public function test_see_if_search_functionality_works()
+	{
+		$text = Movie::first()->title;
+		$response = $this->actingAs($this->user)->get('/api/movies/search?search=' . $text);
+		$response->assertStatus(200);
+	}
+
+	public function test_if_no_search_word_is_sent_all_movie_quotes_are_returned()
+	{
+		$response = $this->actingAs($this->user)->get('/api/movies/search?=');
+		$response->assertStatus(200);
+	}
+
+	public function test_see_if_searching_movie_works()
+	{
+		$text = Movie::first()->title;
+		$response = $this->actingAs($this->user)->get('/api/movies/movie-search?search=' . $text);
+		$response->assertStatus(200);
+	}
+
+	public function test_searching_for_movie_without_keyword_returns_all_movies()
+	{
+		$response = $this->actingAs($this->user)->get('/api/movies/movie-search?search=');
+		$response->assertStatus(200);
+	}
 }

@@ -19,6 +19,7 @@
         <exclude>
             <file>./app/Http/Controllers/Controller.php</file>
             <file>./app/Http/Kernel.php</file>
+            <file>./app/Http/Controllers/OAuthController.php</file>
             <file>./app/Http/Middleware/Authenticate.php</file>
             <file>./app/Http/Middleware/EncryptCookies.php</file>
             <file>./app/Http/Middleware/PreventRequestsDuringMaintenance.php</file>

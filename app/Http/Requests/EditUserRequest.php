@@ -28,6 +28,7 @@ class EditUserRequest extends FormRequest
 			'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore(auth()->user()->id)],
 			'email'    => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore(auth()->user()->id)],
 			'password' => 'nullable|string|min:6|confirmed',
+			'file'     => 'required|image',
 		];
 	}
 }

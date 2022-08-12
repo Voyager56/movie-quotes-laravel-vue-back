@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 		'email',
 		'password',
 		'photo',
-		'oauth'
+		'oauth',
 	];
 
 	/**
@@ -74,12 +74,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 	{
 		return $this->hasMany(Likes::class);
 	}
+
 	public function notifications()
 	{
-		return $this->hasMany(Notification::class);
+		return $this->hasMany(Notification::class, 'to_user_id');
 	}
+
 	public function notificationsTo()
 	{
-		return $this->hasMany(Notification::class);
+		return $this->hasMany(Notification::class, 'from_user_id');
 	}
 }

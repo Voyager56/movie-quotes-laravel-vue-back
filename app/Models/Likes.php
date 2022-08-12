@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Likes extends Model
 {
+	protected $fillable = ['user_id', 'quote_id', 'amount'];
 
-    protected $fillable = ['user_id', 'quote_id', 'amount'];
-    use HasFactory;
+	use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
-    public function quote()
-    {
-        return $this->belongsTo(Quote::class);
-    }
+	public function quote()
+	{
+		return $this->belongsTo(Quote::class);
+	}
 }

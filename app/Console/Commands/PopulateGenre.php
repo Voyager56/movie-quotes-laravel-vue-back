@@ -19,7 +19,7 @@ class PopulateGenre extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'generates genres table';
 
 	/**
 	 * Execute the console command.
