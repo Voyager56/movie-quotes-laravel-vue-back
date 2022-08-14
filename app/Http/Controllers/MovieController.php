@@ -6,7 +6,6 @@ use App\Http\Requests\MovieRequest;
 use App\Http\Resources\QuoteResource;
 use App\Models\Genre;
 use App\Models\Movie;
-use App\Models\MovieGenre;
 use App\Models\Quote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,10 +41,8 @@ class MovieController extends Controller
 
 		foreach ($genres as $genre)
 		{
-			MovieGenre::create([
-				'movie_id' => $movie->id,
-				'genre_id' => Genre::firstWhere('name', $genre)->id,
-			]);
+			$genre = Genre::where('name', $genre)->first();
+			$movie->genres()->attach($genre->id);
 		}
 
 		return response()->json('Movie created', 200);
