@@ -41,19 +41,21 @@ class AuthController extends Controller
 
 	public function register(RegistrationRequest $request): JsonResponse
 	{
+		DB::beginTransaction();
 		$user = User::create([
 			'username' => $request->username,
 			'email'    => $request->email,
 			'password' => Hash::make($request->password),
 		]);
-		$token = auth()->login($user);
-
 		$email_token = Str::random(64);
 
 		DB::table('email_verifications')->insert([
 			'user_id' => $user->id,
 			'token'   => $email_token,
 		]);
+		DB::commit();
+
+		$token = auth()->login($user);
 
 		Mail::send('EmailVerification', [
 			'url'      => url(env('FRONT_END') . '/verified/' . $email_token),
