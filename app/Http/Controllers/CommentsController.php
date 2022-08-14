@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Quote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommentsController extends Controller
 {
@@ -22,6 +23,7 @@ class CommentsController extends Controller
 	public function store(Quote $quote, Request $request): JsonResponse
 	{
 		$commentAuthor = auth()->user();
+		DB::beginTransaction();
 		$comment = $quote->comments()->create([
 			'body'    => $request->comment,
 			'user_id' => $commentAuthor->id,
@@ -36,6 +38,7 @@ class CommentsController extends Controller
 			]);
 			SendNotificationEvent::dispatch($notification, $commentAuthor);
 		}
+		DB::commit();
 		CommentEvent::dispatch($commentAuthor, $comment);
 		return response()->json(['success' => true], 200);
 	}
