@@ -601,11 +601,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Quote added"
+                type: string
+                example: "Quote added"
   /api/quotes/{id}:
 
     get:
@@ -669,11 +666,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Quote updated"
+                type: string
+                example: "Quote updated"
     delete:
       security:
         - bearerAuth: []
@@ -694,11 +688,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Quote deleted"
+                type: string
+                example: "Quote deleted"
   /api/quotes/search:
 
     get:
@@ -745,11 +736,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Like added"
+                type: string
+                example: "Like added"
 
   /api/notifications:
     get:
@@ -846,11 +834,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Profile updated"
+                type: string
+                example: "Profile updated"
 
 
   /api/comments:

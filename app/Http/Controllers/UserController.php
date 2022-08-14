@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EditUserRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -19,6 +17,6 @@ class UserController extends Controller
 		$user->update($data);
 		$user->photo = ENV('BACKEND_URL') . 'storage/' . $image;
 		$user->save();
-		return response()->json(['message' => 'Profile updated'], 200);
+		return response()->json('Profile updated', 200);
 	}
 }
