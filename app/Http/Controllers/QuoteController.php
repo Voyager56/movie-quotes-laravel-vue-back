@@ -65,7 +65,7 @@ class QuoteController extends Controller
 	public function update(Quote $quote, QuoteRequest $request): JsonResponse
 	{
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . '/storage/' . explode('public/', $imageName)[1];
 
 		$quote->update([
 			'text' => [

@@ -54,7 +54,7 @@ class MovieController extends Controller
 	public function update(Movie $movie, MovieRequest $request): JsonResponse
 	{
 		$imageName = $request->file('image')->store('public/images');
-		$imageUrl = ENV('BACKEND_URL') . 'storage/' . explode('public/', $imageName)[1];
+		$imageUrl = ENV('BACKEND_URL') . '/storage/' . explode('public/', $imageName)[1];
 		$movie->update([
 			'title'                    => [
 				'ka' => $request->title_ka,

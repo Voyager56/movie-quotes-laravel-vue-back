@@ -91,6 +91,6 @@ class AuthController extends Controller
 		$user->markEmailAsVerified();
 		$user->save();
 		$email_token->delete();
-		return response()->json(['status' => 'success', 'user' => $user]);
+		return response()->json(['status' => 'success', 'user' => $user], 200);
 	}
 }
